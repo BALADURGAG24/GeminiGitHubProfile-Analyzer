@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Dev Card Generator</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f0e8;
+      --surface: #fffdf8;
+      --surface2: #f0ebe0;
+      --border: #d6cdb8;
+      --border-dark: #b8ad98;
+      --ink: #1a1610;
+      --ink-muted: #6b6355;
+      --ink-dim: #a89f8f;
+      --amber: #c4622d;
+      --amber-light: #f5e6d8;
+      --amber-dark: #8f3d14;
+      --green: #2d6a4f;
+      --green-light: #e0f0e8;
+      --red: #c4352d;
+      --red-light: #f5e0de;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* diagonal stripe texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: repeating-linear-gradient(-45deg,
+          transparent,
+          transparent 20px,
+          rgba(196, 98, 45, 0.025) 20px,
+          rgba(196, 98, 45, 0.025) 21px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* large decorative number bg */
+    body::after {
+      content: '< / >';
+      position: fixed;
+      bottom: -40px;
+      right: -20px;
+      font-family: 'DM Mono', monospace;
+      font-size: 220px;
+      font-weight: 500;
+      color: rgba(196, 98, 45, 0.05);
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+      letter-spacing: -0.06em;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 660px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    /* ── Header ── */
+    .header {
+      margin-bottom: 48px;
+      animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes revealUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--amber);
+      border: 1.5px solid var(--amber);
+      border-radius: 2px;
+      padding: 5px 12px;
+      margin-bottom: 22px;
+      background: var(--amber-light);
+    }
+
+    .header-tag .dot {
+      width: 5px;
+      height: 5px;
+      background: var(--amber);
+      border-radius: 50%;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 7vw, 58px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--amber);
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--ink-muted);
+      line-height: 1.65;
+      max-width: 440px;
+      border-left: 3px solid var(--border-dark);
+      padding-left: 16px;
+    }
+
+    /* ── Divider ── */
+    .rule {
+      height: 1.5px;
+      background: var(--border);
+      margin: 36px 0;
+      position: relative;
+    }
+
+    .rule::after {
+      content: '◆';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg);
+      padding: 0 10px;
+      font-size: 8px;
+      color: var(--amber);
+      letter-spacing: 8px;
+    }
+
+    /* ── Input section ── */
+    .input-section {
+      background: var(--surface);
+      border: 1.5px solid var(--border-dark);
+      border-radius: 4px;
+      padding: 28px 24px;
+      margin-bottom: 32px;
+      animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+      box-shadow: 4px 4px 0 var(--border);
+      transition: box-shadow 0.2s;
+    }
+
+    .input-section:focus-within {
+      box-shadow: 4px 4px 0 var(--amber);
+      border-color: var(--amber);
+    }
+
+    .input-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      color: var(--ink-dim);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-label::before {
+      content: '01';
+      color: var(--amber);
+      font-size: 10px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .at-prefix {
+      position: absolute;
+      left: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 17px;
+      color: var(--amber);
+      pointer-events: none;
+      user-select: none;
+      z-index: 1;
+      font-weight: 500;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1.5px solid var(--border-dark);
+      border-radius: 3px;
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-size: 15px;
+      padding: 13px 14px 13px 34px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--ink-dim);
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--amber);
+      background: var(--surface);
+      outline: none;
+    }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      background: var(--ink);
+      color: var(--bg);
+      border: 1.5px solid var(--ink);
+      border-radius: 3px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 13px 22px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+      position: relative;
+    }
+
+    .btn-generate:hover {
+      background: var(--amber);
+      border-color: var(--amber);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--amber-dark);
+    }
+
+    .btn-generate:active {
+      transform: translate(0, 0);
+      box-shadow: none;
+    }
+
+    .btn-generate:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ── Examples ── */
+    .examples {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .examples-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--ink-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .example-chip {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .example-chip:hover {
+      border-color: var(--amber);
+      color: var(--amber-dark);
+      background: var(--amber-light);
+      transform: translateY(-1px);
+    }
+
+    /* ── Loading state ── */
+    .loading-state {
+      display: none;
+      animation: revealUp 0.3s ease both;
+    }
+
+    .loading-state.active {
+      display: block;
+    }
+
+    .loading-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--amber-light);
+      border: 1.5px solid var(--amber);
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(196, 98, 45, 0.25);
+      border-top-color: var(--amber);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--amber-dark);
+      font-weight: 500;
+    }
+
+    .loading-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-dim);
+      animation: shimmer 1.6s ease-in-out infinite;
+    }
+
+    .loading-step:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .loading-step:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .loading-step:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes shimmer {
+
+      0%,
+      100% {
+        opacity: 0.4;
+      }
+
+      50% {
+        opacity: 0.9;
+      }
+    }
+
+    .step-num {
+      font-size: 10px;
+      color: var(--amber);
+      min-width: 16px;
+      font-weight: 500;
+    }
+
+    /* ── Result state ── */
+    .result-state {
+      display: none;
+      animation: revealUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .result-state.active {
+      display: block;
+    }
+
+    .result-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .result-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--green);
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-light);
+      border: 1px solid rgba(45, 106, 79, 0.3);
+      padding: 5px 12px;
+      border-radius: 2px;
+    }
+
+    .result-label::before {
+      content: '✓';
+      font-size: 11px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-action {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--surface);
+      color: var(--ink-muted);
+      border: 1.5px solid var(--border-dark);
+      border-radius: 3px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.12s;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-action:hover {
+      border-color: var(--ink);
+      color: var(--ink);
+      background: var(--surface2);
+      transform: translate(-1px, -1px);
+      box-shadow: 2px 2px 0 var(--border-dark);
+    }
+
+    .btn-action:active {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-action.copied {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    .card-wrapper {
+      border: 1.5px solid var(--border-dark);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 6px 6px 0 var(--border);
+      animation: cardReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardReveal {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .card-wrapper iframe {
+      width: 100%;
+      border: none;
+      display: block;
+      min-height: 580px;
+      background: transparent;
+    }
+
+    /* ── Error state ── */
+    .error-state {
+      display: none;
+      animation: revealUp 0.3s ease both;
+    }
+
+    .error-state.active {
+      display: block;
+    }
+
+    .error-box {
+      background: var(--red-light);
+      border: 1.5px solid rgba(196, 53, 45, 0.4);
+      border-radius: 3px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      box-shadow: 4px 4px 0 rgba(196, 53, 45, 0.15);
+    }
+
+    .error-icon {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--red);
+      background: rgba(196, 53, 45, 0.12);
+      border: 1px solid rgba(196, 53, 45, 0.3);
+      padding: 3px 7px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .error-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--red);
+      margin-bottom: 5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .error-message {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1.5px solid var(--border);
+      animation: revealUp 0.6s ease 0.3s both;
+    }
+
+    .footer-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-text a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .footer-text a:hover {
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .container {
+        padding: 36px 16px 56px;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+
+      .btn-generate {
+        width: 100%;
+        text-align: center;
+      }
+
+      .result-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .toolbar-actions {
+        width: 100%;
+      }
+
+      .btn-action {
+        flex: 1;
+        justify-content: center;
+      }
+
+      body::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-tag">
+        <span class="dot"></span>
+        Powered by Gemini + MCP
+      </div>
+      <h1>GitHub<br><em>Dev Card</em><br>Generator</h1>
+      <div class="rule"></div>
+      <p class="subtitle">Enter any public GitHub username to generate a beautiful, AI-powered developer card.</p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="input-section">
+      <label class="input-label" for="username-input">GitHub Username</label>
+      <div class="input-row">
+        <div class="input-wrapper">
+          <span class="at-prefix">@</span>
+          <input type="text" id="username-input" placeholder="torvalds" autocomplete="off" autocorrect="off"
+            autocapitalize="off" spellcheck="false">
+        </div>
+        <button class="btn-generate" id="generate-btn" onclick="generateCard()">
+          ⚡ Generate
+        </button>
+      </div>
+      <div class="examples">
+        <span class="examples-label">Try:</span>
+        <span class="example-chip" onclick="quickFill('torvalds')">torvalds</span>
+        <span class="example-chip" onclick="quickFill('gaearon')">gaearon</span>
+        <span class="example-chip" onclick="quickFill('yyx990803')">yyx990803</span>
+        <span class="example-chip" onclick="quickFill('sindresorhus')">sindresorhus</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loading-state">
+      <div class="loading-header">
+        <div class="spinner"></div>
+        <span class="loading-text" id="loading-text">Fetching GitHub profile...</span>
+      </div>
+      <div class="loading-steps">
+        <div class="loading-step">
+          <span class="step-num">01</span>
+          <span>Scraping GitHub profile &amp; repositories</span>
+        </div>
+        <div class="loading-step">
+          <span class="step-num">02</span>
+          <span>Analyzing personality with Gemini AI</span>
+        </div>
+        <div class="loading-step">
+          <span class="step-num">03</span>
+          <span>Designing personalized dev card</span>
+        </div>
+        <div class="loading-step">
+          <span class="step-num">04</span>
+          <span>Saving card for sharing</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-state" id="error-state">
+      <div class="error-box">
+        <span class="error-icon">ERR</span>
+        <div>
+          <div class="error-title">Card Generation Failed</div>
+          <div class="error-message" id="error-message">Something went wrong. Please try again.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result State -->
+    <div class="result-state" id="result-state">
+      <div class="result-toolbar">
+        <span class="result-label" id="result-label">Card generated successfully</span>
+        <div class="toolbar-actions">
+          <button class="btn-action" id="share-btn" onclick="shareCard()">
+            ⎘ Copy Link
+          </button>
+          <button class="btn-action" onclick="openCardTab()">
+            ↗ Open
+          </button>
+          <button class="btn-action" onclick="resetForm()">
+            ↺ New Card
+          </button>
+        </div>
+      </div>
+      <div class="card-wrapper">
+        <iframe id="card-iframe" title="Generated Dev Card" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-text">
+        Built with FastAPI · Google ADK · Gemini 2.5 Flash · MCP ·
+        <a href="https://github.com" target="_blank">GitHub API</a>
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    window.__BACKEND_URL__ = undefined;
+    const BACKEND_URL = window.__BACKEND_URL__ || 'http://localhost:8080';
+    let currentCardUrl = '';
+    let currentUsername = '';
+
+    document.getElementById('username-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') generateCard();
+    });
+
+    function quickFill(username) {
+      document.getElementById('username-input').value = username;
+      document.getElementById('username-input').focus();
+    }
+
+    function showState(state) {
+      ['loading-state', 'error-state', 'result-state'].forEach(id => {
+        document.getElementById(id).classList.remove('active');
+      });
+      if (state) document.getElementById(state).classList.add('active');
+    }
+
+    function setLoadingText(text) {
+      document.getElementById('loading-text').textContent = text;
+    }
+
+    async function generateCard() {
+      const input = document.getElementById('username-input');
+      const username = input.value.trim().replace(/^@/, '');
+
+      if (!username) {
+        input.focus();
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => input.style.borderColor = '', 1000);
+        return;
+      }
+
+      const btn = document.getElementById('generate-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+
+      currentUsername = username;
+      showState('loading-state');
+      setLoadingText(`Fetching @${username} from GitHub...`);
+
+      try {
+        setLoadingText('Analyzing profile with AI...');
+
+        const resp = await fetch(`${BACKEND_URL}/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.json().catch(() => ({}));
+          throw new Error(err.detail || `Server error: ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        currentCardUrl = `${BACKEND_URL}${data.card_url}`;
+
+        setLoadingText('Card ready! Rendering...');
+
+        const iframe = document.getElementById('card-iframe');
+        iframe.srcdoc = data.card_html;
+
+        iframe.onload = () => {
+          try {
+            const h = iframe.contentDocument?.body?.scrollHeight;
+            if (h && h > 200) iframe.style.minHeight = (h + 20) + 'px';
+          } catch (_) { }
+        };
+
+        document.getElementById('result-label').textContent = `Card generated for @${username}`;
+        showState('result-state');
+
+      } catch (err) {
+        document.getElementById('error-message').textContent =
+          err.message || 'Failed to generate card. Make sure the username is correct and the backend is running.';
+        showState('error-state');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⚡ Generate';
+      }
+    }
+
+    function shareCard() {
+      const btn = document.getElementById('share-btn');
+      navigator.clipboard.writeText(currentCardUrl).then(() => {
+        btn.classList.add('copied');
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.textContent = '⎘ Copy Link';
+        }, 2000);
+      }).catch(() => {
+        prompt('Card URL:', currentCardUrl);
+      });
+    }
+
+    function openCardTab() {
+      if (currentCardUrl) window.open(currentCardUrl, '_blank');
+    }
+
+    function resetForm() {
+      showState(null);
+      document.getElementById('username-input').value = '';
+      document.getElementById('username-input').focus();
+      currentCardUrl = '';
+      currentUsername = '';
+    }
+  </script>
+</body>
+
+</html>
