@@ -137,17 +137,7 @@ backend/main.py  (FastAPI)
       └── agent.py (github_card_agent)
            └── MCPToolset → mcp_server.py (stdio)
 ```
----
 
-## 🌍 Live Services
-
-| Service | URL |
-|---------|-----|
-| Frontend | [Open App](https://github-card-frontend-426860326518.us-central1.run.app) |
-| Backend | [Backend API](https://github-card-backend-426860326518.us-central1.run.app) |
-| API Docs | [Swagger Docs](https://github-card-backend-426860326518.us-central1.run.app/docs) |
-
----
 ---
 
 ## 🎨 Card Themes
@@ -206,3 +196,14 @@ github-card-generator/
 ├── .env.example
 └── README.md
 ```
+
+---
+
+## 🌍 Live Services
+
+| Service | URL |
+|---------|-----|
+| Frontend | [Open App](https://github-card-frontend-426860326518.us-central1.run.app) |
+| Backend | [Backend API](https://github-card-backend-426860326518.us-central1.run.app) |
+| API Docs | [Swagger Docs](https://github-card-backend-426860326518.us-central1.run.app/docs) |
+| Health Check | [Health Endpoint](https://github-card-backend-426860326518.us-central1.run.app/health) |
